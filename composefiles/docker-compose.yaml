@@ -1,0 +1,240 @@
+---
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: always
+    ports:
+      - "9000:9000/tcp"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/portainer:/data
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    network_mode: host
+    environment:
+      - PIHOLE_DOMAIN=pihole.internal.home
+      - VIRTUAL_HOST=pihole.internal.home
+      - FTLCONF_LOCAL_IPV4=192.168.1.123
+      - WEB_BIND_ADDR=192.168.1.123
+      - DHCP_ACTIVE=true
+      - DHCP_START=192.168.1.100
+      - DHCP_END=192.168.1.149
+      - DHCP_ROUTER=192.168.1.1
+      - INTERFACE=eno2
+      - FTLCONF_webserver_port=8080
+      - RATE_LIMIT=0/0
+    volumes:
+      - /opt/pihole/config:/etc/pihole
+      - /opt/pihole/dnsmasq.d:/etc/dnsmasq.d
+    cap_add:
+      - NET_ADMIN
+    user: root
+    restart: unless-stopped
+
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    network_mode: host
+    user: root
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /otp/homarr/configs:/app/data/configs
+      - /otp/homarr/icons:/app/public/icons
+      - /otp/homarr/data:/data
+    ports:
+      - "7575:7575"
+
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      # - PUID=1000
+      # - PGID=1000
+      - VERSION=docker
+    volumes:
+      - /opt/plex/library:/config
+      - /mnt/Media/tvseries:/tv
+      - /mnt/Media/movies:/movies
+      - /mnt/Media/music:/music
+      - /mnt/Media/photos:/photos
+      - /mnt/Media/other_videos:/other_videos
+    devices:
+      - /dev/dri:/dev/dri
+    user: root
+    restart: unless-stopped
+
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    # user: 1000:1000
+    network_mode: host
+    volumes:
+      - /opt/jellyfin/config:/config
+      - /opt/jellyfin/cache:/cache
+      - type: bind
+        source: /mnt/Media
+        target: /media
+        read_only: true
+    user: root
+    restart: unless-stopped
+    # # Optional - alternative address used for autodiscovery
+    # environment:
+    #   - JELLYFIN_PublishedServerUrl=http://example.com
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+  kavita:
+    image: linuxserver/kavita:latest
+    container_name: kavita
+    network_mode: host
+    volumes:
+      - /mnt/Media/ebooks/manga:/manga
+      - /mnt/Media/ebooks/comics:/comics
+      - /mnt/Media/ebooks/books:/books
+      - /opt/kavita/config:/kavita/config
+    ports:
+      - "5000:5000"
+    user: root
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: host
+    volumes:
+      - /opt/prowlarr/config:/config
+    ports:
+      - "9696:9696"
+    user: root
+    restart: unless-stopped
+
+  radarr: 
+    image: lscr.io/linuxserver/radarr:latest 
+    container_name: radarr 
+    network_mode: host
+    environment: 
+      - PUID=0 
+      - PGID=0 
+    volumes: 
+      - /opt/radarr/config:/config 
+      - /mnt/Media:/mnt/media 
+      - /mnt/Media/movies:/mnt/downloads 
+    ports: 
+      - 7878:7878 
+    user: root
+    restart: unless-stopped 
+
+  sonarr: 
+    image: lscr.io/linuxserver/sonarr:latest 
+    container_name: sonarr 
+    network_mode: host
+    environment: 
+      - PUID=0 
+      - PGID=0 
+    volumes: 
+      - /opt/sonarr/config:/config 
+      - /mnt/Media:/mnt/media 
+      - /mnt/Media/tvseries:/mnt/downloads
+    ports: 
+      - 8989:8989 
+    user: root
+    restart: unless-stopped 
+
+  qbittorrent: 
+    image: lscr.io/linuxserver/qbittorrent:latest 
+    container_name: qbittorrent 
+    network_mode: host
+    environment: 
+      - PUID=0 
+      - PGID=0 
+      - WEBUI_PORT=8090 
+    volumes: 
+      - /opt/qbittorrent/config:/config 
+      - /mnt/Media/movies:/downloads/radarr
+      - /mnt/Media/tvseries:/downloads/tv-sonarr
+    ports: 
+      - 8090:8080 
+      - 6881:6881 
+      - 6881:6881/udp 
+    user: root
+    restart: unless-stopped 
+
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - /opt/homeassistant/config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    user: root
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    pid: host
+    network_mode: host
+    user: root
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /run/dbus:/run/dbus:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/log:/host/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  nginx-proxy:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy
+    user: root
+    restart: unless-stopped
+    network_mode: host
+    ports:
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - /opt/nginx-proxy/nginx.conf:/etc/nginx/nginx.conf
+      - /opt/nginx-proxy/conf.d:/etc/nginx/conf.d
+      - /opt/nginx-proxy/data:/data
+      - /opt/nginx/certs:/etc/nginx/certs:ro
+      - /opt/nginx-proxy/letsencrypt:/etc/letsencrypt
+  
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser:s6
+    restart: always
+    ports:
+      - "9900:80/tcp"
+    environment:
+      - PUID=0
+      - PGID=0
+    volumes:
+      - /mnt:/srv
+      - /opt/filebrowser/db:/database
+      - /opt/filebrowser/config:/config
+
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
