@@ -28,7 +28,7 @@ Welcome to my homelab repository! This setup is powered by **Docker Compose** an
 ---
 
 ## 📁 Folder Structure
-
+```
 /mnt
 ├── Media
 │ ├── Movies/ # Used by Plex, Jellyfin, Radarr
@@ -39,7 +39,7 @@ Welcome to my homelab repository! This setup is powered by **Docker Compose** an
 └── Data
 ├── Downloads/ # Used by qBittorrent, Sonarr, Radarr
 ├── config folders
-
+```
 
 ---
 
