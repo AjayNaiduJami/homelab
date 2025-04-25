@@ -144,6 +144,23 @@ services:
     ports: 
       - 8989:8989 
     user: root
+    restart: unless-stopped
+
+  readarr: 
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr 
+    network_mode: host
+    environment: 
+      - PUID=0 
+      - PGID=0 
+      - TZ=Asia/Calcutta
+    volumes: 
+      - /opt/readarr/config:/config 
+      - /mnt/Media:/mnt/media 
+      - /mnt/Media/ebooks:/mnt/downloads
+    ports: 
+      - 8787:8787 
+    user: root
     restart: unless-stopped 
 
   qbittorrent: 
