@@ -13,6 +13,7 @@ Thumbs.db
 .vscode/
 *.swp
 
+.$*.xml.bkp
 # Ignore OS-specific folders
 __pycache__/
 node_modules/
