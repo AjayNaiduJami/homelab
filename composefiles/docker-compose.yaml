@@ -36,15 +36,14 @@ services:
 
   homarr:
     container_name: homarr
-    image: ghcr.io/ajnart/homarr:latest
-    network_mode: host
+    image: ghcr.io/homarr-labs/homarr:latest
     user: root
     restart: unless-stopped
+    environment:
+      - SECRET_ENCRYPTION_KEY=something
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /otp/homarr/configs:/app/data/configs
-      - /otp/homarr/icons:/app/public/icons
-      - /otp/homarr/data:/data
+      - /otp/homarr:/appdata
     ports:
       - "7575:7575"
 
