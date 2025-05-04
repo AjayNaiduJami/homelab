@@ -1,0 +1,4 @@
+- import_playbook: deploy_tools.yaml
+- import_playbook: deploy_media.yaml
+- import_playbook: deploy_immich.yaml
+- import_playbook: deploy_network.yaml

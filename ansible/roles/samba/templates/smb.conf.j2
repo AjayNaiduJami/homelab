@@ -1,0 +1,70 @@
+[global]
+    workgroup = WORKGROUP
+    server string = %h server (Samba, Ubuntu)
+    log file = /var/log/samba/log.%m
+    max log size = 1000
+    logging = file
+    panic action = /usr/share/samba/panic-action %d
+    server role = standalone server
+    obey pam restrictions = yes
+    unix password sync = yes
+    passwd program = /usr/bin/passwd %u
+    passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+    pam password change = yes
+    map to guest = bad user
+    usershare allow guests = yes
+
+    ### Time Machine Compatibility ###
+    min protocol = SMB2
+    vfs objects = catia fruit streams_xattr
+    fruit:nfs_aces = no
+    fruit:metadata = stream
+    fruit:model = MacSamba
+    fruit:posix_rename = yes
+    fruit:veto_appledouble = no
+    fruit:wipe_intentionally_left_blank_rfork = yes
+    fruit:delete_empty_adfiles = yes
+    server min protocol = SMB2
+
+    ### WINS Support ###
+    wins support = yes
+    dns proxy = yes
+
+[Media]
+    path = /mnt/Media
+    read only = no
+    browsable = yes
+
+[Shared]
+    path = /mnt/Data/shared
+    read only = no
+    browsable = yes
+
+[Backups-Apple]
+    comment = Apple Backup Shared Folder
+    path = /mnt/Data/backups/apple
+    fruit:time machine = yes
+    force user = smbuser
+    force group = smbgroup
+    read only = no
+    browseable = yes
+    create mask = 0664
+    force create mode = 0664
+    directory mask = 0775
+    force directory mode = 0775
+
+[printers]
+    comment = All Printers
+    browseable = no
+    path = /var/tmp
+    printable = yes
+    guest ok = no
+    read only = yes
+    create mask = 0700
+
+[print$]
+    comment = Printer Drivers
+    path = /var/lib/samba/printers
+    browseable = yes
+    read only = yes
+    guest ok = no

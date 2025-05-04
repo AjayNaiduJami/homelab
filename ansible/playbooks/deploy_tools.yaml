@@ -1,0 +1,55 @@
+- name: Deploy tools stack
+  hosts: homelab
+  become: true
+  vars:
+    app_name: "tools"
+    compose_file: "tools.yaml"
+    docker_compose_action: "recreate"  # options: up, down, recreate
+  roles:
+    - compose_stack
+  pre_tasks:
+    - name: Create homarr config directory
+      file:
+        path: /opt/homarr
+        state: directory
+        recurse: yes
+    - name: Create portainer config directory
+      file:
+        path: /opt/portainer
+        state: directory
+        recurse: yes
+    - name: Create kavita config directory
+      file:
+        path: /opt/kavita/config
+        state: directory
+        recurse: yes
+    - name: Create homeassistant config directory
+      file:
+        path: /opt/homeassistant/config
+        state: directory
+        recurse: yes
+    - name: Create netdata config directory
+      file:
+        path: /opt/netdata/config
+        state: directory
+        recurse: yes
+    - name: Create netdata lib directory
+      file:
+        path: /opt/netdata/lib
+        state: directory
+        recurse: yes
+    - name: Create netdata cache directory
+      file:
+        path: /opt/netdata/cache
+        state: directory
+        recurse: yes
+    - name: Create filebrowser config directory
+      file:
+        path: /opt/filebrowser/config
+        state: directory
+        recurse: yes
+    - name: Create filebrowser db directory
+      file:
+        path: /opt/filebrowser/db
+        state: directory
+        recurse: yes

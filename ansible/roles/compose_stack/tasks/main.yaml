@@ -1,0 +1,29 @@
+- name: Ensure base directory exists
+  file:
+    path: "{{ docker_base_dir }}/{{ app_name }}"
+    state: directory
+    recurse: yes
+
+- name: Copy docker compose file
+  copy:
+    src: "{{ playbook_dir }}/../../files/{{ compose_file }}"
+    dest: "{{ docker_base_dir }}/{{ app_name }}/docker-compose.yaml"
+    mode: "0644"
+
+- name: Run docker compose down
+  shell: docker compose -f {{ docker_base_dir }}/{{ app_name }}/docker-compose.yaml down
+  args:
+    chdir: "{{ docker_base_dir }}/{{ app_name }}"
+  when: docker_compose_action == "recreate" or docker_compose_action == "down"
+
+- name: Pull latest images
+  shell: docker compose -f {{ docker_base_dir }}/{{ app_name }}/docker-compose.yaml pull
+  args:
+    chdir: "{{ docker_base_dir }}/{{ app_name }}"
+  when: docker_compose_action in ["up", "recreate"]
+
+- name: Start docker compose app
+  shell: docker compose -f {{ docker_base_dir }}/{{ app_name }}/docker-compose.yaml up -d
+  args:
+    chdir: "{{ docker_base_dir }}/{{ app_name }}"
+  when: docker_compose_action in ["up", "recreate"]

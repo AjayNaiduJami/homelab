@@ -1,0 +1,5 @@
+- name: Setup and configure Samba
+  hosts: homelab
+  become: true
+  roles:
+    - samba

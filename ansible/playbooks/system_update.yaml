@@ -1,0 +1,5 @@
+- name: Run system updates
+  hosts: homelab
+  become: true
+  roles:
+    - system

@@ -61,7 +61,7 @@ services:
       - PUID=0 
       - PGID=0 
     volumes: 
-      - /opt/radarr/config:/config 
+      - /opt/radarr/config:/config
       - /mnt/Media:/mnt/media 
       - /mnt/Media/movies:/mnt/downloads 
     ports: 

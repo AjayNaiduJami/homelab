@@ -1,0 +1,46 @@
+- name: Deploy tools stack
+  hosts: homelab
+  become: true
+  vars:
+    app_name: "network"
+    compose_file: "network.yaml"
+    docker_compose_action: "recreate"  # options: up, down, recreate
+  roles:
+    - compose_stack
+  pre_tasks:
+    - name: Create pihole config directory
+      file:
+        path: /opt/pihole/config
+        state: directory
+        recurse: yes
+    - name: Create pihole dnsmasq.d directory
+      file:
+        path: /opt/pihole/dnsmasq.d
+        state: directory
+        recurse: yes
+    - name: Create nginx-proxy conf.d directory
+      file:
+        path: /opt/nginx-proxy/conf.d
+        state: directory
+        recurse: yes
+    - name: Create nginx-proxy data directory
+      file:
+        path: /opt/nginx-proxy/data
+        state: directory
+        recurse: yes
+    - name: Create nginx-proxy letsencrypt directory
+      file:
+        path: /opt/nginx-proxy/letsencrypt
+        state: directory
+        recurse: yes
+    - name: Create nginx certs directory
+      file:
+        path: /opt/nginx/certs
+        state: directory
+        recurse: yes
+    - name: Create tailscale directory
+      file:
+        path: /opt/tailscale
+        state: directory
+        recurse: yes
+    

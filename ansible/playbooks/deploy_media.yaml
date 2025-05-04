@@ -1,0 +1,80 @@
+- name: Deploy tools stack
+  hosts: homelab
+  become: true
+  vars:
+    app_name: "media"
+    compose_file: "media.yaml"
+    docker_compose_action: "recreate"  # options: up, down, recreate
+  roles:
+    - compose_stack
+  pre_tasks:
+    - name: Create Media tvseries directory
+      file:
+        path: /mnt/Media/tvseries
+        state: directory
+        recurse: yes
+    - name: Create Media movies directory
+      file:
+        path: /mnt/Media/movies
+        state: directory
+        recurse: yes
+    - name: Create Media music directory
+      file:
+        path: /mnt/Media/music
+        state: directory
+        recurse: yes
+    - name: Create Media photos directory
+      file:
+        path: /mnt/Media/photos
+        state: directory
+        recurse: yes
+    - name: Create Media other_videos directory
+      file:
+        path: /mnt/Media/other_videos
+        state: directory
+        recurse: yes
+    - name: Create Media ebooks directory
+      file:
+        path: /mnt/Media/ebooks
+        state: directory
+        recurse: yes
+    - name: Create plex library directory
+      file:
+        path: /opt/plex/library
+        state: directory
+        recurse: yes
+    - name: Create jellyfin config directory
+      file:
+        path: /opt/jellyfin/config
+        state: directory
+        recurse: yes
+    - name: Create jellyfin cache directory
+      file:
+        path: /opt/jellyfin/cache
+        state: directory
+        recurse: yes
+    - name: Create prowlarr config directory
+      file:
+        path: /opt/prowlarr/config
+        state: directory
+        recurse: yes
+    - name: Create radarr config directory
+      file:
+        path: /opt/radarr/config
+        state: directory
+        recurse: yes
+    - name: Create sonarr config directory
+      file:
+        path: /opt/sonarr/config
+        state: directory
+        recurse: yes
+    - name: Create readarr config directory
+      file:
+        path: /opt/readarr/config
+        state: directory
+        recurse: yes
+    - name: Create qbittorrent config directory
+      file:
+        path: /opt/qbittorrent/config
+        state: directory
+        recurse: yes

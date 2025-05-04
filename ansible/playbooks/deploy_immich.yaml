@@ -1,0 +1,30 @@
+- name: Deploy tools stack
+  hosts: homelab
+  become: true
+  vars:
+    app_name: "immich"
+    compose_file: "immich.yaml"
+    docker_compose_action: "recreate"  # options: up, down, recreate
+  roles:
+    - compose_stack
+  pre_tasks:
+    - name: Create immich upload directory
+      file:
+        path: /mnt/Data/immich/library
+        state: directory
+        recurse: yes
+    - name: Create immich library directory
+      file:
+        path: /mnt/Data/Library
+        state: directory
+        recurse: yes
+    - name: Create immich model-cache directory
+      file:
+        path: /mnt/Data/immich/model-cache
+        state: directory
+        recurse: yes
+    - name: Create immich postgres directory
+      file:
+        path: /mnt/Data/immich/postgres
+        state: directory
+        recurse: yes
