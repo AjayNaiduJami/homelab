@@ -1,28 +1,6 @@
 ---
+name: media
 services:
-  portainer:
-    container_name: portainer
-    image: portainer/portainer-ce
-    restart: always
-    ports:
-      - "9000:9000/tcp"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/portainer:/data
-
-  homarr:
-    container_name: homarr
-    image: ghcr.io/homarr-labs/homarr:latest
-    user: root
-    restart: unless-stopped
-    environment:
-      - SECRET_ENCRYPTION_KEY=something
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/homarr:/appdata
-    ports:
-      - "7575:7575"
-
   plex:
     image: lscr.io/linuxserver/plex:latest
     container_name: plex
@@ -63,20 +41,6 @@ services:
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-
-  kavita:
-    image: linuxserver/kavita:latest
-    container_name: kavita
-    network_mode: host
-    volumes:
-      - /mnt/Media/ebooks/manga:/manga
-      - /mnt/Media/ebooks/comics:/comics
-      - /mnt/Media/ebooks/books:/books
-      - /opt/kavita/config:/kavita/config
-    ports:
-      - "5000:5000"
-    user: root
-    restart: unless-stopped
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -156,60 +120,3 @@ services:
       - 6881:6881/udp 
     user: root
     restart: unless-stopped 
-
-  homeassistant:
-    container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:stable
-    volumes:
-      - /opt/homeassistant/config:/config
-      - /etc/localtime:/etc/localtime:ro
-      - /run/dbus:/run/dbus:ro
-    user: root
-    restart: unless-stopped
-    privileged: true
-    network_mode: host
-
-  netdata:
-    image: netdata/netdata
-    container_name: netdata
-    pid: host
-    network_mode: host
-    user: root
-    restart: unless-stopped
-    cap_add:
-      - SYS_PTRACE
-      - SYS_ADMIN
-    security_opt:
-      - apparmor:unconfined
-    volumes:
-      - netdataconfig:/etc/netdata
-      - netdatalib:/var/lib/netdata
-      - netdatacache:/var/cache/netdata
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /proc:/host/proc:ro
-      - /run/dbus:/run/dbus:ro
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-      - /var/log:/host/var/log:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-  
-  filebrowser:
-    container_name: filebrowser
-    image: filebrowser/filebrowser:s6
-    restart: always
-    ports:
-      - "9900:80/tcp"
-    environment:
-      - PUID=0
-      - PGID=0
-    volumes:
-      - /mnt:/srv
-      - /opt/filebrowser/db:/database
-      - /opt/filebrowser/config:/config
-
-volumes:
-  netdataconfig:
-  netdatalib:
-  netdatacache:
