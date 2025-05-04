@@ -16,6 +16,7 @@ This homelab uses Docker to manage the following services:
 - **Portainer**: Universal container management platform via UI.
 - **Prowlarr**: Indexer manager/proxy
 - **Radarr**: Movie collection manager
+- **Readarr**: eBooks collection manager
 - **Sonarr**: PVR collection manager
 - **qBittorrent**: BitTorrent client
 - **Tailscale**: WireGuard-based VPN
