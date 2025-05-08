@@ -39,7 +39,6 @@ services:
       - /opt/nginx-proxy/nginx.conf:/etc/nginx/nginx.conf
       - /opt/nginx-proxy/conf.d:/etc/nginx/conf.d
       - /opt/nginx-proxy/data:/data
-      - /opt/nginx/certs:/etc/nginx/certs:ro
       - /opt/nginx-proxy/letsencrypt:/etc/letsencrypt
 
   tailscale:

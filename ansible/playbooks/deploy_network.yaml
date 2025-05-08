@@ -33,11 +33,6 @@
         path: /opt/nginx-proxy/letsencrypt
         state: directory
         recurse: yes
-    - name: Create nginx certs directory
-      file:
-        path: /opt/nginx/certs
-        state: directory
-        recurse: yes
     - name: Create tailscale directory
       file:
         path: /opt/tailscale
